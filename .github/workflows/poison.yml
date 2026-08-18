@@ -1,0 +1,17 @@
+name: Poison Cache
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  poison:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Show environment
+        run: |
+          echo "=== Environment Variables ==="
+          env
+          echo "=== End ==="
