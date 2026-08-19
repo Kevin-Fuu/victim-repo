@@ -1,0 +1,36 @@
+name: Combined Poison and Execute
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  poison-and-execute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create malicious payload
+        run: |
+          mkdir -p ./malicious-bin
+          echo '#!/bin/bash' > ./malicious-bin/build
+          echo 'echo "!!! Malicious code executed from poisoned cache !!!"' >> ./malicious-bin/build
+          echo 'echo "This step would run with high privileges."' >> ./malicious-bin/build
+          chmod +x ./malicious-bin/build
+
+      - name: Save poisoned cache
+        uses: actions/cache/save@v4
+        with:
+          path: ./malicious-bin
+          key: linux-build-${{ github.run_id }}
+
+      - name: Restore poisoned cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ./malicious-bin
+          key: linux-build-${{ github.run_id }}
+
+      - name: Execute build script
+        run: |
+          ./malicious-bin/build
