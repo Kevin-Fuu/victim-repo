@@ -32,6 +32,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Wait for cache upload
+        run: sleep 10
+
       - name: Restore poisoned cache
         uses: actions/cache/restore@v4
         with:
