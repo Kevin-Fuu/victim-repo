@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  poison-and-execute:
+  poison:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -24,6 +24,13 @@ jobs:
         with:
           path: ./malicious-bin
           key: linux-build-${{ github.run_id }}
+
+  execute:
+    needs: poison
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Restore poisoned cache
         uses: actions/cache/restore@v4
