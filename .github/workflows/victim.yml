@@ -1,0 +1,24 @@
+name: Victim Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Restore poisoned cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ./malicious-bin
+          key: linux-build-${{ hashFiles('toolchain.lock') }}
+
+      - name: Execute build script
+        run: |
+          ./malicious-bin/build
